@@ -42,9 +42,8 @@ class Authenticator(dns_common.DNSAuthenticator):
                              default_propagation_seconds: int = 60) -> None:
         """Populate Authenticator with additional parser arguments"""
         super().add_parser_arguments(add, default_propagation_seconds)
-        add("apitoken", help="Token for accessing ddnss.de API")
-        add("apiuser", help="Username for accessing ddnss.de API")
-        add("apipassword", help="Password for accessing ddnss.de API")
+        add("credentials", help="ddnss.de credentials INI file")
+        add("api-token", help="Token for accessing ddnss.de API")
 
     def more_info(self) -> str:
         """Provide more detailed information about this Plugin."""
@@ -60,16 +59,18 @@ class Authenticator(dns_common.DNSAuthenticator):
         Note that we do not actually verify anything here but simply check
         that an API token was actually passed.
         """
-        provided_api_token = self.conf("apitoken")
-        # for now we only accept API tokens and ignore the possibility to
-        # also login and use the api based on username / password
-        provided_api_username = self.conf("apiuser")
-        provided_api_password = self.conf("apipassword")
-        if not provided_api_token:
-            msg = (f"Failed to setup credentials - no valid DNS API token "
-                   f"was provided for {self.name}-apitoken")
-            raise PluginError(msg)
-        self._api_token = provided_api_token
+        # first check if an API token was provided ...
+        if self.conf('api-token'):
+            self._api_token = self.conf('api-token')
+            return
+
+        # ... if not we request a credentials file
+        self._credentials = self._configure_credentials(
+            'credentials',
+            'ddnss.de credentials INI file',
+            {'api-token': 'Token for accessing ddnss.de API'},
+        )
+        self._api_token = self._credentials.conf('api-token')
 
     def _perform(self, domain: str, validation_name: str,
                  validation: str) -> None:
