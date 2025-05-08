@@ -8,8 +8,7 @@ version = '1.0.0'
 authors = [{name = 'A. Stamminger', email = 'stammingers@gmail.com'}]
 description = 'DDNSS.de DNS authenticator plugin for Certbot'
 readme = 'README.md'
-license = 'MIT'
-license-files = ['LICENSE']
+license = {file = 'LICENSE.txt'}
 requires-python = '>=3.9'
 dependencies = [
 	'certbot',
