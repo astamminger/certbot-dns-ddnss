@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 DNS Authenticator for DDNSS.de
 """
@@ -7,7 +8,7 @@ DNS Authenticator for DDNSS.de
 
 import logging
 
-from typing import Callable 
+from typing import Callable
 from typing import Dict
 
 from urllib import parse
@@ -29,7 +30,7 @@ class Authenticator(dns_common.DNSAuthenticator):
     records with a DNS entry in order to perform a DNS-01 challenge.
     """
 
-    description = ("Obtain certificates for domains hosted with 'ddnss.de' " 
+    description = ("Obtain certificates for domains hosted with 'ddnss.de' "
                    "using DNS-01 challenges")
 
     def __init__(self, *args, **kwargs) -> None:
@@ -37,7 +38,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         self._api_token = None
 
     @classmethod
-    def add_parser_arguments(cls, add: Callable[..., None], 
+    def add_parser_arguments(cls, add: Callable[..., None],
                              default_propagation_seconds: int = 60) -> None:
         """Populate Authenticator with additional parser arguments"""
         super().add_parser_arguments(add, default_propagation_seconds)
@@ -60,7 +61,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         that an API token was actually passed.
         """
         provided_api_token = self.conf("apitoken")
-        # for now we only accept API tokens and ignore the possibility to 
+        # for now we only accept API tokens and ignore the possibility to
         # also login and use the api based on username / password
         provided_api_username = self.conf("apiuser")
         provided_api_password = self.conf("apipassword")
@@ -70,11 +71,11 @@ class Authenticator(dns_common.DNSAuthenticator):
             raise PluginError(msg)
         self._api_token = provided_api_token
 
-    def _perform(self, domain: str, validation_name: str, 
+    def _perform(self, domain: str, validation_name: str,
                  validation: str) -> None:
         self._get_ddnss_client().add_txt_record(domain, validation)
 
-    def _cleanup(self, domain: str, validation_name: str, 
+    def _cleanup(self, domain: str, validation_name: str,
                  validation: str) -> None:
         self._get_ddnss_client().del_txt_record(domain)
 
@@ -99,7 +100,7 @@ class _DDNSSClient(object):
 
     def add_txt_record(self, domain: str, txt_record: str) -> None:
         """Add the TXT record to the DNS entry.
-        
+
         :param str domain: Domain for which the record shall be set.
         :param str txt_record: Content of the TXT record.
         """
@@ -107,7 +108,7 @@ class _DDNSSClient(object):
         api_add_params = self.get_api_request_add_params(self._api_token,
                                                          domain, txt_record)
         # build and perform API request with ddnss.de_
-        api_add_request = self.get_api_request_for_params(api_add_params) 
+        api_add_request = self.get_api_request_for_params(api_add_params)
         response = request.urlopen(api_add_request)
 
         # verify and raise if response is not OK
@@ -119,7 +120,7 @@ class _DDNSSClient(object):
         api_del_params = self.get_api_request_del_params(self._api_token,
                                                          domain)
         # build and perform API request with ddnss.de
-        api_del_request = self.get_api_request_for_params(api_del_params) 
+        api_del_request = self.get_api_request_for_params(api_del_params)
         response = request.urlopen(api_del_request)
 
         # verify and raise if response is not OK
@@ -129,7 +130,7 @@ class _DDNSSClient(object):
         """Verify the recieved reponse and raise if needed
 
         :param response.addinfourl reponse: response recived from API url
-    
+
         :raises: PluginError if recieved response does not meet the defined
             criteria
         """
@@ -146,10 +147,10 @@ class _DDNSSClient(object):
                    f"DDNSS-Message 'Your hostname has been updated' is not "
                    f"found in returned response Header")
             raise PluginError(msg)
-        
+
     def get_api_request_for_params(self, api_params: Dict) -> str:
         """Build the complete request from passed parameters
-        
+
         :param str api_params: Parameter used to build the API request.
 
         :returns: URL performing the requested API call
@@ -169,11 +170,11 @@ class _DDNSSClient(object):
         """
         return "https://www.ddnss.de/upd.php"
 
-    def get_api_request_add_params(self, api_token: str, domain: str, 
+    def get_api_request_add_params(self, api_token: str, domain: str,
                                    txt_record: str) -> Dict:
         """API parameters for adding a TXT record.
 
-        :param str api_token: API token to be used with the request. 
+        :param str api_token: API token to be used with the request.
         :param str domain: Domain for which the record shall be set.
         :param str txt_record: Content of the TXT record.
 
@@ -188,11 +189,11 @@ class _DDNSSClient(object):
             "txt": txt_record,
         }
         return params
-        
+
     def get_api_request_del_params(self, api_token: str, domain: str) -> Dict:
         """API parameters for deleting a TXT record.
 
-        :param str api_token: API token to be used with the request. 
+        :param str api_token: API token to be used with the request.
         :param str domain: Domain for which the record shall be deleted.
 
         :returns: parameters required to perform the API call.
