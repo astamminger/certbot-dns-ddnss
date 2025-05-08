@@ -43,7 +43,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         """Populate Authenticator with additional parser arguments"""
         super().add_parser_arguments(add, default_propagation_seconds)
         add("credentials", help="ddnss.de credentials INI file")
-        add("api-token", help="Token for accessing ddnss.de API")
+        add("token", help="Token for accessing ddnss.de API")
 
     def more_info(self) -> str:
         """Provide more detailed information about this Plugin."""
@@ -60,17 +60,17 @@ class Authenticator(dns_common.DNSAuthenticator):
         that an API token was actually passed.
         """
         # first check if an API token was provided ...
-        if self.conf('api-token'):
-            self._api_token = self.conf('api-token')
+        if self.conf('token'):
+            self._api_token = self.conf('token')
             return
 
         # ... if not we request a credentials file
         self._credentials = self._configure_credentials(
             'credentials',
             'ddnss.de credentials INI file',
-            {'api-token': 'Token for accessing ddnss.de API'},
+            {'token': 'Token for accessing ddnss.de API'},
         )
-        self._api_token = self._credentials.conf('api-token')
+        self._api_token = self._credentials.conf('token')
 
     def _perform(self, domain: str, validation_name: str,
                  validation: str) -> None:
