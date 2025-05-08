@@ -1,13 +1,13 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.5.0
+  rev: v5.0.0
   hooks:
   - id: check-json
   - id: check-yaml
   - id: fix-encoding-pragma
   - id: trailing-whitespace
 - repo: https://github.com/pycqa/flake8
-  rev: 3.8.1
+  rev: 5.0.4
   hooks:
   - id: flake8
     exclude: '^.*(\.testdata\/).*$'
