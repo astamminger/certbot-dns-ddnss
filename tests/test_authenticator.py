@@ -25,17 +25,20 @@ class AuthenticatorTest(TestCase, dns_test_common.BaseAuthenticatorTest):
         # api_token parameter becomes dns_ddnss_api_token
         self.auth = Authenticator(self.config, 'dns-ddnss') 
 
+    @pytest.mark.usefixtures('response_with_ok_header')
     @test_utils.patch_display_util()
     def test_perform(self, unused_mock_get_utility):
         """Test set TXT record"""
         result = self.auth.perform([self.achall])
 
+    @pytest.mark.usefixtures('response_with_ok_header')
     @test_utils.patch_display_util()
     def test_cleanup(self, unused_mock_get_utility):
         """Test delete TXT record"""
         # in order to run the cleanup 'standalone' we need to manually run 
         # _setup_credentials() to populate the internal _api_token attribute
         self.auth._setup_credentials()
+        self.auth._attempt_cleanup = True
         self.auth.cleanup([self.achall])
 
     @test_utils.patch_display_util()
