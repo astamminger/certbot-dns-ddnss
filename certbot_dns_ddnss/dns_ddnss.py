@@ -59,11 +59,6 @@ class Authenticator(dns_common.DNSAuthenticator):
         Note that we do not actually verify anything here but simply check
         that an API token was actually passed.
         """
-        print(self.__dict__)
-        print("SETUP CREDENTIALS")
-        print(f"{self.conf('apitoken')}")
-        print(f"{self.conf('apiuser')}")
-        print(f"{self.conf('apipassword')}")
         provided_api_token = self.conf("apitoken")
         # for now we only accept API tokens and ignore the possibility to 
         # also login and use the api based on username / password
@@ -77,13 +72,10 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def _perform(self, domain: str, validation_name: str, 
                  validation: str) -> None:
-        print(f"### HELLLLOOOO: {domain}, {validation_name}, {validation}")
         self._get_ddnss_client().add_txt_record(domain, validation)
-        
 
     def _cleanup(self, domain: str, validation_name: str, 
                  validation: str) -> None:
-        print(f"Running Cleanup Hook")
         self._get_ddnss_client().del_txt_record(domain)
 
     def _get_ddnss_client(self):
