@@ -7,6 +7,18 @@ name = 'certbot-dns-ddnss'
 version = '1.0.0'
 authors = [{name = 'A. Stamminger', email = 'stammingers@gmail.com'}]
 description = 'DDNSS.de DNS authenticator plugin for Certbot'
+classifiers=[
+        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "License :: OSI Approved :: MIT License",
+        "Topic :: Security",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Utilities",
+]
 readme = 'README.md'
 license = {file = 'LICENSE.txt'}
 requires-python = '>=3.9'
