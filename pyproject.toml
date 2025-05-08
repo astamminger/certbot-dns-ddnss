@@ -4,7 +4,7 @@ requires = ['setuptools']
 
 [project]
 name = 'certbot-dns-ddnss'
-version = '1.0.0'
+version = '1.1.0'
 authors = [{name = 'A. Stamminger', email = 'stammingers@gmail.com'}]
 description = 'DDNSS.de DNS authenticator plugin for Certbot'
 classifiers=[
