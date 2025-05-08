@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Test Suite for Authenticator Tests
 """
@@ -23,19 +24,22 @@ class AuthenticatorTest(TestCase, dns_test_common.BaseAuthenticatorTest):
         self.config = mock.MagicMock(dns_ddnss_propagation_seconds=0)
         # name is prepended to all parameters set, i.e.
         # api_token parameter becomes dns_ddnss_api_token
-        self.auth = Authenticator(self.config, 'dns-ddnss') 
+        self.auth = Authenticator(self.config, 'dns-ddnss')
 
+    @pytest.mark.usefixtures('response_with_ok_header')
     @test_utils.patch_display_util()
     def test_perform(self, unused_mock_get_utility):
         """Test set TXT record"""
         result = self.auth.perform([self.achall])
 
+    @pytest.mark.usefixtures('response_with_ok_header')
     @test_utils.patch_display_util()
     def test_cleanup(self, unused_mock_get_utility):
         """Test delete TXT record"""
-        # in order to run the cleanup 'standalone' we need to manually run 
+        # in order to run the cleanup 'standalone' we need to manually run
         # _setup_credentials() to populate the internal _api_token attribute
         self.auth._setup_credentials()
+        self.auth._attempt_cleanup = True
         self.auth.cleanup([self.achall])
 
     @test_utils.patch_display_util()
@@ -45,7 +49,8 @@ class AuthenticatorTest(TestCase, dns_test_common.BaseAuthenticatorTest):
         # getting the client should fail as expected
         with pytest.raises(PluginError):
             client = self.auth._get_ddnss_client()
-        
-        
+
+
 if __name__ == "__main__":
+    import sys
     sys.exit(pytest.main(sys.argv[1:] + [__file__]))
